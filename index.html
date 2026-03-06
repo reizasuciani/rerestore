@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,183 +7,290 @@
 <title>reizastore</title>
 
 <style>
-:root {
-    --warna-utama: #d6bfa7;
-    --warna-bg: #f8f1e7;
+
+:root{
+--utama:#e6d5c3;
+--bg:#f8f1e7;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--warna-bg);
-    
-    /* Motif background */
-    background-image: radial-gradient(#e6d5c3 1px, transparent 1px);
-    background-size: 20px 20px;
+body{
+margin:0;
+font-family:Arial;
+background:var(--bg);
 }
 
-header {
-    background: var(--warna-utama);
-    color: #5a4636;
-    padding: 20px;
-    text-align: center;
+/* HEADER */
+
+header{
+background:var(--utama);
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 20px;
 }
 
-.cart {
-    position: fixed;
-    top: 15px;
-    right: 20px;
-    background: white;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-weight: bold;
+header h1{
+margin:0;
 }
 
-.total {
-    position: fixed;
-    top: 60px;
-    right: 20px;
-    background: white;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-weight: bold;
+/* KERANJANG */
+
+.cart-icon{
+cursor:pointer;
+font-size:18px;
+font-weight:bold;
 }
 
-.checkout {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--warna-utama);
-    color: #5a4636;
-    padding: 12px 18px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
+.cart-panel{
+position:fixed;
+right:-350px;
+top:0;
+width:320px;
+height:100%;
+background:white;
+box-shadow:-5px 0 10px rgba(0,0,0,0.2);
+padding:20px;
+transition:0.3s;
+overflow:auto;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-    padding: 20px;
+.cart-panel.show{
+right:0;
 }
 
-.card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
+/* GRID PRODUK */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:15px;
+padding:20px;
 }
 
-.card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+.card{
+background:white;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+overflow:hidden;
+text-align:center;
 }
 
-.card-body {
-    padding: 10px;
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
 }
 
-.harga {
-    color: #8b6b4f;
-    font-weight: bold;
+.card-body{
+padding:10px;
 }
 
-button {
-    background: var(--warna-utama);
-    color: #5a4636;
-    border: none;
-    padding: 8px;
-    width: 100%;
-    border-radius: 8px;
-    cursor: pointer;
+.harga{
+color:#7a5b45;
+font-weight:bold;
 }
+
+button{
+background:var(--utama);
+border:none;
+padding:8px;
+border-radius:6px;
+cursor:pointer;
+width:100%;
+}
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+}
+
+.total{
+margin-top:15px;
+font-weight:bold;
+}
+
+.checkout{
+margin-top:10px;
+width:100%;
+padding:10px;
+background:#25D366;
+color:white;
+border:none;
+border-radius:6px;
+}
+
 </style>
 </head>
+
 <body>
 
 <header>
-    <h1>reizastore</h1>
+<h1>reizastore</h1>
+
+<div class="cart-icon" onclick="toggleCart()">
+🛒 <span id="cartCount">0</span>
+</div>
+
 </header>
 
-<div class="cart">
-    🛒 <span id="cartCount">0</span>
-</div>
+<div class="grid" id="produkGrid"></div>
+
+<div class="cart-panel" id="cartPanel">
+
+<h2>Keranjang</h2>
+
+<div id="cartItems"></div>
 
 <div class="total">
-    Total: Rp <span id="totalHarga">0</span>
+Total: Rp <span id="totalHarga">0</span>
 </div>
 
-<div class="grid">
+<button class="checkout" onclick="checkoutWA()">
+Checkout WhatsApp
+</button>
 
-    <div class="card">
-        <img src="https://via.placeholder.com/300x300">
-        <div class="card-body">
-            <div>Baju Uniqlo</div>
-            <div class="harga">Rp 50000</div>
-            <button onclick="beli('Baju Uniqlo', 50000)">Beli</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <img src="https://via.placeholder.com/300x300">
-        <div class="card-body">
-            <div>Baju Adidas</div>
-            <div class="harga">Rp 75000</div>
-            <button onclick="beli('Baju Adidas', 75000)">Beli</button>
-        </div>
-    </div>
-
-</div>
-
-<div class="checkout" onclick="checkoutWA()">
-    Checkout via WhatsApp
 </div>
 
 <script>
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-updateTampilan();
+/* PRODUK (bisa ditambah disini) */
 
-function beli(nama, harga) {
-    cart.push({nama, harga});
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateTampilan();
-    alert("Produk ditambahkan!");
+let produk=[
+
+{
+nama:"Baju Uniqlo",
+harga:50000,
+gambar:"https://via.placeholder.com/300"
+},
+
+{
+nama:"Baju Adidas",
+harga:75000,
+gambar:"https://via.placeholder.com/300"
+},
+
+{
+nama:"Hoodie Thrift",
+harga:65000,
+gambar:"https://via.placeholder.com/300"
 }
 
-function updateTampilan() {
-    document.getElementById("cartCount").innerText = cart.length;
+]
 
-    let total = 0;
-    cart.forEach(item => total += item.harga);
+let cart=[]
 
-    document.getElementById("totalHarga").innerText = total;
+let grid=document.getElementById("produkGrid")
+
+produk.forEach((item,index)=>{
+
+grid.innerHTML+=`
+
+<div class="card">
+
+<img src="${item.gambar}">
+
+<div class="card-body">
+
+<h3>${item.nama}</h3>
+
+<div class="harga">Rp ${item.harga}</div>
+
+<button onclick="tambahKeranjang(${index})">
+Tambah Keranjang
+</button>
+
+</div>
+
+</div>
+
+`
+
+})
+
+function tambahKeranjang(index){
+
+cart.push(produk[index])
+
+updateCart()
+
 }
 
-function checkoutWA() {
-    if (cart.length === 0) {
-        alert("Keranjang kosong!");
-        return;
-    }
+function updateCart(){
 
-    let pesan = "Halo, saya mau pesan:%0A";
-    let total = 0;
+document.getElementById("cartCount").innerText=cart.length
 
-    cart.forEach((item, index) => {
-        pesan += (index+1) + ". " + item.nama + " - Rp " + item.harga + "%0A";
-        total += item.harga;
-    });
+let total=0
+let html=""
 
-    pesan += "%0ATotal: Rp " + total;
+cart.forEach((item,i)=>{
 
-    let nomorWA = "6281913820010";
+total+=item.harga
 
-    let url = "https://wa.me/" + nomorWA + "?text=" + pesan;
-    window.open(url, "_blank");
+html+=`
+
+<div class="cart-item">
+
+${item.nama}
+
+<button onclick="hapusItem(${i})">X</button>
+
+</div>
+
+`
+
+})
+
+document.getElementById("cartItems").innerHTML=html
+document.getElementById("totalHarga").innerText=total
+
 }
+
+function hapusItem(i){
+
+cart.splice(i,1)
+
+updateCart()
+
+}
+
+function toggleCart(){
+
+document.getElementById("cartPanel").classList.toggle("show")
+
+}
+
+function checkoutWA(){
+
+if(cart.length==0){
+
+alert("Keranjang kosong")
+
+return
+
+}
+
+let pesan="Halo saya mau pesan:%0A"
+let total=0
+
+cart.forEach((item,i)=>{
+
+pesan+=`${i+1}. ${item.nama} - Rp ${item.harga}%0A`
+
+total+=item.harga
+
+})
+
+pesan+=`%0ATotal Rp ${total}`
+
+let nomor="6281913820010"
+
+window.open(`https://wa.me/${nomor}?text=${pesan}`)
+
+}
+
 </script>
 
 </body>
 </html>
+```
