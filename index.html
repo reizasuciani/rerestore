@@ -1,296 +1,228 @@
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>reizastore</title>
-
-<style>
-
-:root{
---utama:#e6d5c3;
---bg:#f8f1e7;
-}
-
-body{
-margin:0;
-font-family:Arial;
-background:var(--bg);
-}
-
-/* HEADER */
-
-header{
-background:var(--utama);
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 20px;
-}
-
-header h1{
-margin:0;
-}
-
-/* KERANJANG */
-
-.cart-icon{
-cursor:pointer;
-font-size:18px;
-font-weight:bold;
-}
-
-.cart-panel{
-position:fixed;
-right:-350px;
-top:0;
-width:320px;
-height:100%;
-background:white;
-box-shadow:-5px 0 10px rgba(0,0,0,0.2);
-padding:20px;
-transition:0.3s;
-overflow:auto;
-}
-
-.cart-panel.show{
-right:0;
-}
-
-/* GRID PRODUK */
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:15px;
-padding:20px;
-}
-
-.card{
-background:white;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-overflow:hidden;
-text-align:center;
-}
-
-.card img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-.card-body{
-padding:10px;
-}
-
-.harga{
-color:#7a5b45;
-font-weight:bold;
-}
-
-button{
-background:var(--utama);
-border:none;
-padding:8px;
-border-radius:6px;
-cursor:pointer;
-width:100%;
-}
-
-.cart-item{
-display:flex;
-justify-content:space-between;
-margin-bottom:10px;
-}
-
-.total{
-margin-top:15px;
-font-weight:bold;
-}
-
-.checkout{
-margin-top:10px;
-width:100%;
-padding:10px;
-background:#25D366;
-color:white;
-border:none;
-border-radius:6px;
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-<h1>reizastore</h1>
-
-<div class="cart-icon" onclick="toggleCart()">
-🛒 <span id="cartCount">0</span>
-</div>
-
-</header>
-
-<div class="grid" id="produkGrid"></div>
-
-<div class="cart-panel" id="cartPanel">
-
-<h2>Keranjang</h2>
-
-<div id="cartItems"></div>
-
-<div class="total">
-Total: Rp <span id="totalHarga">0</span>
-</div>
-
-<button class="checkout" onclick="checkoutWA()">
-Checkout WhatsApp
-</button>
-
-</div>
-
-<script>
-
-/* PRODUK (bisa ditambah disini) */
-
-let produk=[
-
-{
-nama:"Baju Uniqlo",
-harga:50000,
-gambar:"https://via.placeholder.com/300"
-},
-
-{
-nama:"Baju Adidas",
-harga:75000,
-gambar:"https://via.placeholder.com/300"
-},
-
-{
-nama:"Hoodie Thrift",
-harga:65000,
-gambar:"https://via.placeholder.com/300"
-}
-
-]
-
-let cart=[]
-
-let grid=document.getElementById("produkGrid")
-
-produk.forEach((item,index)=>{
-
-grid.innerHTML+=`
-
-<div class="card">
-
-<img src="${item.gambar}">
-
-<div class="card-body">
-
-<h3>${item.nama}</h3>
-
-<div class="harga">Rp ${item.harga}</div>
-
-<button onclick="tambahKeranjang(${index})">
-Tambah Keranjang
-</button>
-
-</div>
-
-</div>
-
-`
-
-})
-
-function tambahKeranjang(index){
-
-cart.push(produk[index])
-
-updateCart()
-
-}
-
-function updateCart(){
-
-document.getElementById("cartCount").innerText=cart.length
-
-let total=0
-let html=""
-
-cart.forEach((item,i)=>{
-
-total+=item.harga
-
-html+=`
-
-<div class="cart-item">
-
-${item.nama}
-
-<button onclick="hapusItem(${i})">X</button>
-
-</div>
-
-`
-
-})
-
-document.getElementById("cartItems").innerHTML=html
-document.getElementById("totalHarga").innerText=total
-
-}
-
-function hapusItem(i){
-
-cart.splice(i,1)
-
-updateCart()
-
-}
-
-function toggleCart(){
-
-document.getElementById("cartPanel").classList.toggle("show")
-
-}
-
-function checkoutWA(){
-
-if(cart.length==0){
-
-alert("Keranjang kosong")
-
-return
-
-}
-
-let pesan="Halo saya mau pesan:%0A"
-let total=0
-
-cart.forEach((item,i)=>{
-
-pesan+=`${i+1}. ${item.nama} - Rp ${item.harga}%0A`
-
-total+=item.harga
-
-})
-
-pesan+=`%0ATotal Rp ${total}`
-
-let nomor="6281913820010"
-
-window.open(`https://wa.me/${nomor}?text=${pesan}`)
-
-}
-
-</script>
-
-</body>
-</html>
-```
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Online - Belanja Sekarang</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brown-light: #D4A574;
+            --brown-medium: #A0826D;
+            --brown-dark: #6B4423;
+            --cream: #F5E6D3;
+            --gold: #D4AF37;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, #E8D4C0 100%);
+            color: var(--brown-dark);
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-medium) 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--gold);
+            color: var(--brown-dark);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, var(--brown-light) 0%, var(--brown-medium) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, #C9A227 100%);
+            color: var(--brown-dark);
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* PRODUCTS SECTION */
+        .products-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--brown-dark);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brown-light), var(--gold));
+            margin: 0.5rem auto 0;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--brown-light) 0%, var(--cream) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--brown-dark);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--brown-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            min-height: 40px;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .product-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quantity-selector {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            border: 1
