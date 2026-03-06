@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>reizastore</title>
+
+<style>
+:root {
+    --warna-utama: #d6bfa7;
+    --warna-bg: #f8f1e7;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--warna-bg);
+    
+    /* Motif background */
+    background-image: radial-gradient(#e6d5c3 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+header {
+    background: var(--warna-utama);
+    color: #5a4636;
+    padding: 20px;
+    text-align: center;
+}
+
+.cart {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.total {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.checkout {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--warna-utama);
+    color: #5a4636;
+    padding: 12px 18px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+.harga {
+    color: #8b6b4f;
+    font-weight: bold;
+}
+
+button {
+    background: var(--warna-utama);
+    color: #5a4636;
+    border: none;
+    padding: 8px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>reizastore</h1>
+</header>
+
+<div class="cart">
+    🛒 <span id="cartCount">0</span>
+</div>
+
+<div class="total">
+    Total: Rp <span id="totalHarga">0</span>
+</div>
+
+<div class="grid">
+
+    <div class="card">
+        <img src="https://via.placeholder.com/300x300">
+        <div class="card-body">
+            <div>Baju Uniqlo</div>
+            <div class="harga">Rp 50000</div>
+            <button onclick="beli('Baju Uniqlo', 50000)">Beli</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/300x300">
+        <div class="card-body">
+            <div>Baju Adidas</div>
+            <div class="harga">Rp 75000</div>
+            <button onclick="beli('Baju Adidas', 75000)">Beli</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="checkout" onclick="checkoutWA()">
+    Checkout via WhatsApp
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+updateTampilan();
+
+function beli(nama, harga) {
+    cart.push({nama, harga});
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateTampilan();
+    alert("Produk ditambahkan!");
+}
+
+function updateTampilan() {
+    document.getElementById("cartCount").innerText = cart.length;
+
+    let total = 0;
+    cart.forEach(item => total += item.harga);
+
+    document.getElementById("totalHarga").innerText = total;
+}
+
+function checkoutWA() {
+    if (cart.length === 0) {
+        alert("Keranjang kosong!");
+        return;
+    }
+
+    let pesan = "Halo, saya mau pesan:%0A";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        pesan += (index+1) + ". " + item.nama + " - Rp " + item.harga + "%0A";
+        total += item.harga;
+    });
+
+    pesan += "%0ATotal: Rp " + total;
+
+    let nomorWA = "6281913820010";
+
+    let url = "https://wa.me/" + nomorWA + "?text=" + pesan;
+    window.open(url, "_blank");
+}
+</script>
+
+</body>
+</html>
